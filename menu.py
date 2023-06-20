@@ -99,7 +99,7 @@ def play():
         colision_enemy_bullets = pygame.sprite.spritecollide(player_one, bullet_list_enemies, True) #Elimino las balas pero no el jugador
 
         for i in colision_enemy_bullets:
-            player_one.life -= 10 #Por cada colisión le resto X de vida
+            player_one.life -= 40 #Por cada colisión le resto X de vida
             explosion_bull_ply = Explosion(i.rect.center) #Explosión x balas del enemigo colision con el jugaodr
             player_list.add(explosion_bull_ply)
             hit_sound.play()
