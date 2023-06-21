@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.life = 100
         self.ply_score = 0
         self.ply_name = ""
+        self.nivel = 0
 
     def update(self):
         self.speed_x = 0

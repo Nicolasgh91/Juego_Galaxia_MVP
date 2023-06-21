@@ -31,6 +31,7 @@ while i < 10: #Creo por única vez sólo 10 enemigos.
 
 
 
+#Función que se acciona cuando el jugador presiona play
 def play():    
     flag_first_game = False
     SHOOT_EVENT = pygame.USEREVENT + 1
@@ -40,23 +41,22 @@ def play():
     enemies_list.add(enemigo) 
     player_list.add(enemigo)
     pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.3)
     
     #Efecto parallax
     scroll = 0
-    galaxy_wallpaper_height = screen_wallpaper.get_height()
-    cant_img = math.ceil(S_H / galaxy_wallpaper_height) + 1
-    print(cant_img)
-
+    galaxy_wallpaper_height = screen_wallpaper.get_height() #Altura de la imagen del fondo de pantalla
+    cant_img = math.ceil(S_H / galaxy_wallpaper_height) + 1 #Cantidad de imágenes necesarias para cubrir la pantalla
 
     while True:
         clock.tick(fps)
         
-        for i in range(0, cant_img):
+        for i in range(0, cant_img): #Repite una y otra vez la cantidad de veces que determina el "cant_img", seria 2 una y otra vez
             SCREEN.blit(screen_wallpaper, (i * galaxy_wallpaper_height + scroll,0)) #Primera es 0, per en la proxima se multiplica x el largo de la imagen
-        scroll -= 0.5
-        
-        if abs(scroll) > galaxy_wallpaper_height:
-            scroll = 0
+        scroll -= 0.5 #Va restando el desplazamiento
+
+        if scroll > galaxy_wallpaper_height: #El scroll va restando del tamaño de la pantalla, entonces cuando llegue al final se reinicia y vuelve a renderizar la misma imagen
+            scroll = 0 #Reinicia el desplazamiento a 0 si se ha desplazado completamente una imagen
 
         
         #Inicio eventos
@@ -94,12 +94,20 @@ def play():
             player_list.add(explosion)
             explosion_sound.set_volume(0.3)
             explosion_sound.play()
-
+            
+            #Niveles
+            if player_one.ply_score >= 50 and player_one.ply_score % 50 == 0: #Cada 50 puntos obtenidos, aumenta en 1 el nivel
+                player_one.nivel  += 1
+            if player_one.nivel >= 5 and player_one.nivel % 5 == 0: #Cada 5 niveles avanzados, creo un enemigo más
+                    enemigo = Enemies()
+                    enemies_list.add(enemigo) 
+                    player_list.add(enemigo)
+                    
         #Colisiones balas enemigo con el jugador
         colision_enemy_bullets = pygame.sprite.spritecollide(player_one, bullet_list_enemies, True) #Elimino las balas pero no el jugador
 
         for i in colision_enemy_bullets:
-            player_one.life -= 40 #Por cada colisión le resto X de vida
+            player_one.life -= 10 #Por cada colisión le resto X de vida
             explosion_bull_ply = Explosion(i.rect.center) #Explosión x balas del enemigo colision con el jugaodr
             player_list.add(explosion_bull_ply)
             hit_sound.play()
@@ -125,8 +133,9 @@ def play():
                 player_one.life = 100
         
         #Renderizo
-        render_text_score(SCREEN, (" Puntos: "+ str(player_one.ply_score)+ "   " ), 30, S_W - 85, 2) #Renderizo constantemente la vida del jugador
-        render_life_bar(SCREEN, S_W - 285, 0, player_one.life)
+        render_text_score(SCREEN, (" Puntos: "+ str(player_one.ply_score)+ "   " ), 23, S_W - 65, 2) #Renderizo constantemente la vida del jugador
+        render_text_score(SCREEN, (" Nivel: "+ str(player_one.nivel) + "   " ), 23, S_W - 1027, 2)
+        render_life_bar(SCREEN, S_W - 243,5, player_one.life)
         pygame.display.flip()
         pygame.display.update()
         

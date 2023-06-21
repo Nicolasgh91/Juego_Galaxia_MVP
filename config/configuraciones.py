@@ -5,7 +5,7 @@ from config.button import *
 pygame.mixer.init()
 
 #Configuraciones principales
-S_W = 1400
+S_W = 1080
 S_H = 600
 TPL_SCREEN = (S_W,S_H)
 SCREEN = pygame.display.set_mode(TPL_SCREEN)
@@ -61,7 +61,7 @@ for i in range(1,13):
 #Recibe una pantalla, el texto a renderizar, el tamaño de la fuente y la posición en donde se va a renderizar
 def render_text_score(screen, text, size, x,y):
     font = pygame.font.SysFont("Arial", size, bold=True)
-    text_frame = font.render(text,True, WHITE) #El color de fondo es el negro
+    text_frame = font.render(text,True, GREEN2) #El color de fondo es el negro
     text_rect = text_frame.get_rect()
     text_rect.midtop = (x,y)
     screen.blit(text_frame, text_rect)
